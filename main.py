@@ -37,22 +37,23 @@ class Application(QWidget):
             self.result.setText("Please enter a string.")
             return
 
-        if not user_input.isalpha(): # temporary, until i add logic for AQ numbers
-            self.result.setText("Input must contain only letters.")
-            return
+        #if not user_input.isalpha(): # temporary, until i add logic for AQ numbers
+        #    self.result.setText("Input must contain only letters.")
+        #    return
 
         result = calculate_alphanumeric_qabbala_value(user_input)
         self.result.setText(f"'{user_input}' = AQ- {result}")
 
 def calculate_alphanumeric_qabbala_value(user_input):
+
     user_input = user_input.upper()
-    ciphers = Ciphers()
-    ciphers.alphanumeric_qabbala()
+    aq = Ciphers('Alphanumeric Qabbala')
+    aq.alphanumeric_qabbala()
 
     value = 0
     for char in user_input:
-        if char in ciphers.gematria:
-            value += ciphers.gematria[char] 
+        if char in aq.gematria:
+            value += aq.gematria[char] 
 
     return value
 
