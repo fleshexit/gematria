@@ -51,9 +51,9 @@ def calculate_alphanumeric_qabbala_value(user_input):
     aq.alphanumeric_qabbala()
 
     value = 0
-    for char in user_input:
-        if char in aq.gematria:
-            value += aq.gematria[char] 
+    for char in user_input: # iterate through string
+        if char in aq.gematria: # check if char is in dict
+            value += aq.gematria[char] # add value to total
 
     return value
 

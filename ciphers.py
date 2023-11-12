@@ -12,7 +12,7 @@ class Ciphers:
     def alphanumeric_qabbala(self):
         for i in range(36):
             if i < 10:
-                self.gematria[i] = i
+                self.gematria[str(i)] = i
             else:
                 self.gematria[chr(65 + i - 10)] = i 
         return self.gematria
