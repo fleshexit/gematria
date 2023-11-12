@@ -1,4 +1,39 @@
 from ciphers import Ciphers
+import sys
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout
+
+
+class Application(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.initUI()
+
+    def initUI(self):
+        self.label = QLabel('Enter a string:')
+        self.entry = QLineEdit()
+        self.button = QPushButton('Calculate', self)
+        self.result = QLabel()
+
+        vbox = QVBoxLayout()
+        vbox.addWidget(self.label)
+        vbox.addWidget(self.entry)
+        vbox.addWidget(self.button)
+        vbox.addWidget(self.result)
+        vbox.setSpacing(10)
+        vbox.setContentsMargins(10, 10, 10, 10)
+
+        self.setLayout(vbox)
+
+        self.button.clicked.connect(self.calculate)
+
+        self.setWindowTitle('Alphanumeric Qabbala Calculator')
+        self.setGeometry(200, 200, 250, 120)  # Adjusted window size
+        self.show()
+
+    def calculate(self):
+        user_input = self.entry.text()
+        result = calculate_alphanumeric_qabbala_value(user_input)
+        self.result.setText(f"'{user_input}' = AQ- {result}")
 
 
 def calculate_alphanumeric_qabbala_value(user_input):
@@ -12,46 +47,14 @@ def calculate_alphanumeric_qabbala_value(user_input):
             value += ciphers.gematria[char]
 
     return value
-# 
-# user_input = input("Enter a string: ")
-# result = calculate_alphanumeric_qabbala_value(user_input)
-# print(f"The alphanumeric qabbala value of '{user_input}' is: {result}")
-# 
-# 
-
-import tkinter as tk
+    
 
 
-class Application(tk.Frame):
-    def __init__(self, master=None):
-        super().__init__(master)
-        self.master = master
-        #self.master.configure(background="#000000")
-        self.pack()
-        self.create_widgets()
-
-    def create_widgets(self):
-        self.label = tk.Label(self, text="Enter a string:")
-        self.label.pack(side="top")
-
-        self.entry = tk.Entry(self)
-        self.entry.pack(side="top")
-
-        self.button = tk.Button(self, text="Calculate", command=self.calculate)
-        self.button.pack(side="top")
-
-        self.result = tk.Label(self, text="")
-        self.result.pack(side="top")
-
-    def calculate(self):
-        user_input = self.entry.get()
-        result = calculate_alphanumeric_qabbala_value(user_input)
-        self.result["text"] = f"'{user_input}' = AQ-{result}"
+def main():
+    app = QApplication(sys.argv)
+    ex = Application()
+    sys.exit(app.exec_())
 
 
-app = Application(master=tk.Tk())
-app.master.title("Alphanumeric Qabbala Calculator")
-app.master.geometry("300x150")
-app.master.resizable(False, False)
-
-app.mainloop()
+if __name__ == '__main__':
+    main()
