@@ -12,9 +12,9 @@ class Ciphers:
     def alphanumeric_qabbala(self):
         for i in range(36):
             if i < 10:
-                self.gematria[i] = f'{i}'
+                self.gematria[i] = i
             else:
-                self.gematria[chr(65 + i - 10)] = i
+                self.gematria[chr(65 + i - 10)] = i 
         return self.gematria
 
     def english_ordinal(self):
