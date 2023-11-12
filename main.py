@@ -31,30 +31,33 @@ class Application(QWidget):
         self.show()
 
     def calculate(self):
-        user_input = self.entry.text()
+        user_input = self.entry.text().strip()  # strip whitespace
+
+        if not user_input:
+            self.result.setText("Please enter a string.")
+            return
+
+        if not user_input.isalpha(): # temporary, until i add logic for AQ numbers
+            self.result.setText("Input must contain only letters.")
+            return
+
         result = calculate_alphanumeric_qabbala_value(user_input)
         self.result.setText(f"'{user_input}' = AQ- {result}")
 
-
 def calculate_alphanumeric_qabbala_value(user_input):
-    user_input = user_input.upper()  
+    user_input = user_input.upper()
     ciphers = Ciphers()
-    ciphers.alphanumeric_qabbala() 
+    ciphers.alphanumeric_qabbala()
 
     value = 0
     for char in user_input:
         if char in ciphers.gematria:
-            value += ciphers.gematria[char]
+            value += ciphers.gematria[char] 
 
     return value
-    
-
-
-def main():
-    app = QApplication(sys.argv)
-    ex = Application()
-    sys.exit(app.exec_())
 
 
 if __name__ == '__main__':
-    main()
+    app = QApplication(sys.argv)
+    ex = Application()
+    sys.exit(app.exec_())
