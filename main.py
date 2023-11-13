@@ -1,4 +1,4 @@
-from ciphers import Ciphers
+import ciphers
 import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout
 
@@ -37,25 +37,9 @@ class Application(QWidget):
             self.result.setText("Please enter a string.")
             return
 
-        #if not user_input.isalpha(): # temporary, until i add logic for AQ numbers
-        #    self.result.setText("Input must contain only letters.")
-        #    return
-
-        result = calculate_alphanumeric_qabbala_value(user_input)
-        self.result.setText(f"'{user_input}' = AQ- {result}")
-
-def calculate_alphanumeric_qabbala_value(user_input):
-
-    user_input = user_input.upper()
-    aq = Ciphers('Alphanumeric Qabbala')
-    aq.alphanumeric_qabbala()
-
-    value = 0
-    for char in user_input: # iterate through string
-        if char in aq.gematria: # check if char is in dict
-            value += aq.gematria[char] # add value to total
-
-    return value
+        aq = ciphers.AlphanumericQabbala()
+        result = aq.calculate(user_input)
+        self.result.setText(f"'{user_input}' = AQ - {result}")
 
 
 if __name__ == '__main__':
