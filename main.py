@@ -1,7 +1,5 @@
 import ciphers
-import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout
-
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QComboBox
 
 class Application(QWidget):
     def __init__(self):
@@ -9,40 +7,56 @@ class Application(QWidget):
         self.initUI()
 
     def initUI(self):
-        self.label = QLabel('Enter a string:')
+        self.setWindowTitle('Alphanumeric Qabbala Calculator')
+        self.setGeometry(200, 200, 400, 150)  
+
+        self.cipher_label = QLabel('Ciphers:')
+        self.cipher_combo = QComboBox(self)
+        self.cipher_combo.addItems(['Alphanumeric Qabbala', 'English Ordinal', 'Synx'])
+
+        self.prompt_label = QLabel('Enter a string:')
         self.entry = QLineEdit()
-        self.button = QPushButton('Calculate', self)
-        self.result = QLabel()
+        self.calc_button = QPushButton('Calculate', self)
+        self.result_label = QLabel()
 
         vbox = QVBoxLayout()
-        vbox.addWidget(self.label)
+        vbox.addWidget(self.cipher_label)
+        vbox.addWidget(self.cipher_combo)
+        vbox.addWidget(self.prompt_label)
         vbox.addWidget(self.entry)
-        vbox.addWidget(self.button)
-        vbox.addWidget(self.result)
+        vbox.addWidget(self.calc_button)
+        vbox.addWidget(self.result_label)
+
         vbox.setSpacing(10)
         vbox.setContentsMargins(10, 10, 10, 10)
-
         self.setLayout(vbox)
 
-        self.button.clicked.connect(self.calculate)
+        self.calc_button.clicked.connect(self.calculate)
 
-        self.setWindowTitle('Alphanumeric Qabbala Calculator')
-        self.setGeometry(200, 200, 250, 120)  # Adjusted window size
         self.show()
 
     def calculate(self):
         user_input = self.entry.text().strip()  # strip whitespace
 
         if not user_input:
-            self.result.setText("Please enter a string.")
+            self.result_label.setText("Please enter a string.")
             return
+        
+        if self.cipher_combo.currentText() == "Alphanumeric Qabbala":
+            aq = ciphers.AlphanumericQabbala()
+            result = aq.calculate(user_input)
+            self.result_label.setText(f"'{user_input}' = AQ - {result}")
+        
+        elif self.cipher_combo.currentText() == "English Ordinal":
+            eo = ciphers.EnglishOrdinal()
+            result = eo.calculate(user_input)
+            self.result_label.setText(f"'{user_input}' = EO - {result}")
 
-        aq = ciphers.AlphanumericQabbala()
-        result = aq.calculate(user_input)
-        self.result.setText(f"'{user_input}' = AQ - {result}")
+        else:
+            self.result_label.setText("Support for this cipher will be coming soon.")
 
 
 if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    ex = Application()
-    sys.exit(app.exec_())
+    app = QApplication([])
+    window = Application()
+    app.exec_()
