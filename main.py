@@ -1,6 +1,5 @@
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QCheckBox
-
-import ciphers  # Assuming this module contains the cipher implementations
+import ciphers  
 
 class Application(QWidget):
     def __init__(self):
@@ -9,7 +8,7 @@ class Application(QWidget):
 
     def initUI(self):
         self.setWindowTitle('Alphanumeric Qabbala Calculator')
-        self.setFixedSize(400, 300)  # Adjusted window size
+        self.setFixedSize(400, 300)  
 
         self.cipher_label = QLabel('Ciphers:')
         self.cipher_checkboxes = [
