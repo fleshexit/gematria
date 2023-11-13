@@ -1,7 +1,7 @@
 # Gematria Calculator
 A simple gematria calculator application.
 
-Current supported ciphers:
+### Current supported ciphers:
 
 - Alphanumeric Qabbala
 - English Ordinal
