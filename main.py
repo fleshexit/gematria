@@ -1,5 +1,6 @@
-import ciphers
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QComboBox
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QCheckBox
+
+import ciphers  # Assuming this module contains the cipher implementations
 
 class Application(QWidget):
     def __init__(self):
@@ -8,11 +9,14 @@ class Application(QWidget):
 
     def initUI(self):
         self.setWindowTitle('Alphanumeric Qabbala Calculator')
-        self.setGeometry(200, 200, 400, 150)  
+        self.setFixedSize(400, 300)  # Adjusted window size
 
         self.cipher_label = QLabel('Ciphers:')
-        self.cipher_combo = QComboBox(self)
-        self.cipher_combo.addItems(['Alphanumeric Qabbala', 'English Ordinal', 'Synx'])
+        self.cipher_checkboxes = [
+            QCheckBox('Alphanumeric Qabbala', self),
+            QCheckBox('English Ordinal', self),
+            QCheckBox('Synx', self),
+        ]
 
         self.prompt_label = QLabel('Enter a string:')
         self.entry = QLineEdit()
@@ -21,7 +25,9 @@ class Application(QWidget):
 
         vbox = QVBoxLayout()
         vbox.addWidget(self.cipher_label)
-        vbox.addWidget(self.cipher_combo)
+        for checkbox in self.cipher_checkboxes:
+            vbox.addWidget(checkbox)
+
         vbox.addWidget(self.prompt_label)
         vbox.addWidget(self.entry)
         vbox.addWidget(self.calc_button)
@@ -41,19 +47,27 @@ class Application(QWidget):
         if not user_input:
             self.result_label.setText("Please enter a string.")
             return
-        
-        if self.cipher_combo.currentText() == "Alphanumeric Qabbala":
-            aq = ciphers.AlphanumericQabbala()
-            result = aq.calculate(user_input)
-            self.result_label.setText(f"'{user_input}' = AQ - {result}")
-        
-        elif self.cipher_combo.currentText() == "English Ordinal":
-            eo = ciphers.EnglishOrdinal()
-            result = eo.calculate(user_input)
-            self.result_label.setText(f"'{user_input}' = EO - {result}")
 
-        else:
-            self.result_label.setText("Support for this cipher will be coming soon.")
+        selected_ciphers = [checkbox.text() for checkbox in self.cipher_checkboxes if checkbox.isChecked()]
+
+        if not selected_ciphers:
+            self.result_label.setText("Please select at least one cipher.")
+            return
+
+        result_texts = []
+        for cipher_name in selected_ciphers:
+            if cipher_name == "Alphanumeric Qabbala":
+                aq = ciphers.AlphanumericQabbala()
+                result_texts.append(f"'{user_input}' = AQ - {aq.calculate(user_input)}")
+
+            elif cipher_name == "English Ordinal":
+                eo = ciphers.EnglishOrdinal()
+                result_texts.append(f"'{user_input}' = EO - {eo.calculate(user_input)}")
+
+            else:
+                result_texts.append(f"Support for '{cipher_name}' will be coming soon.")
+
+        self.result_label.setText("\n".join(result_texts))
 
 
 if __name__ == '__main__':
