@@ -1,56 +1,47 @@
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QCheckBox
-import ciphers  
+import tkinter as tk
+from tkinter import ttk
+import ciphers
 
-class Application(QWidget):
+# planning a move to customtkinter.py
+
+class Application(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.initUI()
+        self.title('Alphanumeric Qabbala Calculator')
+        self.geometry('400x300')
 
-    def initUI(self):
-        self.setWindowTitle('Alphanumeric Qabbala Calculator')
-        self.setFixedSize(400, 300)  
-
-        self.cipher_label = QLabel('Ciphers:')
+        self.cipher_label = tk.Label(self, text='Ciphers:')
         self.cipher_checkboxes = [
-            QCheckBox('Alphanumeric Qabbala', self),
-            QCheckBox('English Ordinal', self),
-            QCheckBox('Synx', self),
+            ttk.Checkbutton(self, text='Alphanumeric Qabbala'),
+            ttk.Checkbutton(self, text='English Ordinal'),
+            ttk.Checkbutton(self, text='Synx'),
         ]
 
-        self.prompt_label = QLabel('Enter a string:')
-        self.entry = QLineEdit()
-        self.calc_button = QPushButton('Calculate', self)
-        self.result_label = QLabel()
+        self.prompt_label = tk.Label(self, text='Enter a string:')
+        self.entry = tk.Entry(self)
+        self.calc_button = tk.Button(self, text='Calculate', command=self.calculate)
+        self.result_label = tk.Label(self, text='')
 
-        vbox = QVBoxLayout()
-        vbox.addWidget(self.cipher_label)
-        for checkbox in self.cipher_checkboxes:
-            vbox.addWidget(checkbox)
+        self.cipher_label.grid(row=0, column=0, columnspan=2, pady=(10, 0))
+        for i, checkbox in enumerate(self.cipher_checkboxes, start=1):
+            checkbox.grid(row=i, column=0, columnspan=2, sticky='w')
 
-        vbox.addWidget(self.prompt_label)
-        vbox.addWidget(self.entry)
-        vbox.addWidget(self.calc_button)
-        vbox.addWidget(self.result_label)
-
-        vbox.setSpacing(10)
-        vbox.setContentsMargins(10, 10, 10, 10)
-        self.setLayout(vbox)
-
-        self.calc_button.clicked.connect(self.calculate)
-
-        self.show()
+        self.prompt_label.grid(row=len(self.cipher_checkboxes) + 1, column=0, columnspan=2, pady=(10, 0))
+        self.entry.grid(row=len(self.cipher_checkboxes) + 2, column=0, columnspan=2, pady=(0, 10))
+        self.calc_button.grid(row=len(self.cipher_checkboxes) + 3, column=0, columnspan=2, pady=(0, 10))
+        self.result_label.grid(row=len(self.cipher_checkboxes) + 4, column=0, columnspan=2, pady=(10, 0))
 
     def calculate(self):
-        user_input = self.entry.text().strip()  # strip whitespace
+        user_input = self.entry.get().strip()
 
         if not user_input:
-            self.result_label.setText("Please enter a string.")
+            self.result_label.config(text="Please enter a string.")
             return
 
-        selected_ciphers = [checkbox.text() for checkbox in self.cipher_checkboxes if checkbox.isChecked()]
+        selected_ciphers = [checkbox.cget("text") for checkbox in self.cipher_checkboxes if checkbox.instate(['selected'])]
 
         if not selected_ciphers:
-            self.result_label.setText("Please select at least one cipher.")
+            self.result_label.config(text="Please select at least one cipher.")
             return
 
         result_texts = []
@@ -66,10 +57,9 @@ class Application(QWidget):
             else:
                 result_texts.append(f"Support for '{cipher_name}' will be coming soon.")
 
-        self.result_label.setText("\n".join(result_texts))
+        self.result_label.config(text="\n".join(result_texts))
 
 
 if __name__ == '__main__':
-    app = QApplication([])
-    window = Application()
-    app.exec_()
+    app = Application()
+    app.mainloop()
